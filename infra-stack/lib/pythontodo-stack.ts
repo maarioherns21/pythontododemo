@@ -24,7 +24,7 @@ export class PythontodoStack extends cdk.Stack {
     /// Create Lambda Function for the api
     const api = new lambda.Function(this, "API", {
       runtime: lambda.Runtime.PYTHON_3_9,
-      code: lambda.Code.fromAsset("../api"),
+      code: lambda.Code.fromAsset("../api/lambda_function.zip"),
       handler: "todo.handler",
       environment: {
         TABLE_NAME: table.tableName
