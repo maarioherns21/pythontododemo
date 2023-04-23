@@ -1,8 +1,12 @@
+from fastapi import FastAPI
+from mangum import Mangum
+
+app = FastAPI()
+
+# wraps the app so it can be understand by lamnda function interface
+handler = Mangum(app)
 
 
-
-def handler(event, cntext):
-    return {
-        "statusCode": 200,
-        "body": "Hello World"
-    }
+@app.get("/")
+async def root():
+    return {"message": "Hello from ToDo API!"}
