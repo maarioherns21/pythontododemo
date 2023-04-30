@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 
 
 const Home: NextPage = () => {
-  const todoApiEndpoint: string = process.env.NEXT_PUBLIC_APP || "";
+  const todoApiEndpoint: string = process.env.NEXT_PUBLIC_DEVELOPMENT_ENV_VARIABLE || "";
   const userId: string = "marioTodo1";
   const [isLoading, setIsLoading] = React.useState(true);
   const [tasks, setTasks] = React.useState<Task[]>([]);
