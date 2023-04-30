@@ -8,13 +8,14 @@ import { v4 as uuidv4 } from "uuid";
 
 
 const Home: NextPage = () => {
-  const todoApiEndpoint: string = "https://xsqpgx2u2n3napfgjzhcrbgzfu0tqgrj.lambda-url.us-west-1.on.aws";
+  const todoApiEndpoint: string =
+    "https://xsqpgx2u2n3napfgjzhcrbgzfu0tqgrj.lambda-url.us-west-1.on.aws";
   const userId: string = "marioTodo1";
   const [isLoading, setIsLoading] = React.useState(true);
   const [tasks, setTasks] = React.useState<Task[]>([]);
   const [newTaskContent, setNewTaskContent] = React.useState("");
 
-  /// fetch the data 
+  /// fetch the data
   const getTasks = async () => {
     try {
       setIsLoading(true);
@@ -31,38 +32,35 @@ const Home: NextPage = () => {
     }
   };
 
-
   // Get the existing to-do items.
   useEffect(() => {
     getTasks();
   }, []);
 
-
-  // creates a new task  
+  // creates a new task
   const putTask = async (task: Task) => {
     try {
       // Put a local copy of this task into the state first for immediate feedback.
       setTasks([task, ...tasks]);
 
-      const response = await fetch(`${todoApiEndpoint}/create-task`, {
+      const res = await fetch(`${todoApiEndpoint}/create-task`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(task),
       });
-      console.log(response);
-      const responseData = await response.json();
-      const taskId: string = responseData.task.task_id;
-      console.log(`Successfully put task: ${taskId}`);
+      // console.log(res);
+      const data = await res.json();
+      const taskId: string = data.task.task_id;
+      // console.log(`Successfully put task: ${taskId}`);
       getTasks();
     } catch (error: any) {
       console.log(error.message);
     }
   };
 
-
-  ///deletes the task 
+  ///deletes the task
   const deleteTask = async (taskId?: string) => {
     try {
       // Remove it from the local task list.
@@ -70,34 +68,33 @@ const Home: NextPage = () => {
       setTasks(newTasks);
 
       // Delete task from table.
-      const response = await fetch(`${todoApiEndpoint}/delete-task/${taskId}`, {
+      const res = await fetch(`${todoApiEndpoint}/delete-task/${taskId}`, {
         method: "DELETE",
       });
-      console.log(response);
+      // console.log(res);
     } catch (error: any) {
       console.log(error.message);
     }
   };
 
-
   ///update task to Done
   const updateTask = async (updatedTask: Task) => {
     try {
-      const response = await fetch(`${todoApiEndpoint}/update-task`, {
+      const res = await fetch(`${todoApiEndpoint}/update-task`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(updatedTask),
       });
-      console.log(response);
+      const data = await res.json()
+      // console.log(data);
     } catch (error: any) {
       console.log(error.message);
     }
   };
 
-
-  /// adds new task 
+  /// adds new task
   const addNewTask = async () => {
     try {
       const task: Task = {
@@ -112,7 +109,6 @@ const Home: NextPage = () => {
       console.log(error.message);
     }
   };
-
 
   // Create the task input field.
   const taskInputField = (
@@ -138,7 +134,12 @@ const Home: NextPage = () => {
     // Create task using index as key
     <div>
       {tasks.map((task) => (
-        <TaskItem key={task.task_id} {...task} onDelete={deleteTask} onUpdate={updateTask}  />
+        <TaskItem
+          key={task.task_id}
+          {...task}
+          onDelete={deleteTask}
+          onUpdate={updateTask}
+        />
       ))}
     </div>
   );
